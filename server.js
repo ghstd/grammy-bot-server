@@ -1,5 +1,6 @@
 import express from 'express'
 import cors from 'cors'
+import axios from 'axios'
 import { configDotenv } from 'dotenv'
 import OpenAI from "openai"
 configDotenv()
@@ -27,10 +28,9 @@ async function getCompletion(messages) {
 
 app.get('/test', async (req, res) => {
 	res.send('Hello World!')
-	const response = await fetch('https://jsonplaceholder.typicode.com/todos/1')
-	const data = await response.json()
-	console.log('fetch status', response.status)
-	console.log(data)
+	const response = await axios.post('https://jsonplaceholder.typicode.com/posts', { id: 117, title: 'test axios' })
+	console.log('axios.post status: ', response.status)
+	console.log(response.data)
 	return
 })
 
@@ -39,19 +39,13 @@ app.post('/', async (req, res) => {
 		res.send({ status: 'ok' })
 		const data = req.body
 		const completion = await getCompletion(data.messages)
-		const response = await fetch(URL, {
-			method: 'POST',
-			headers: {
-				"Content-Type": "application/json",
-			},
-			body: JSON.stringify({
-				myMark: 'completion',
-				chat_id: data.chat_id,
-				message_id: data.message_id,
-				completion: completion.choices[0].message.content
-			})
+		const response = await axios.post(URL, {
+			myMark: 'completion',
+			chat_id: data.chat_id,
+			message_id: data.message_id,
+			completion: completion.choices[0].message.content
 		})
-		console.log('fetch status', response.status)
+		console.log('axios.post status: ', response.status)
 		return
 	} catch (e) {
 		console.log('in catch: ', e)
