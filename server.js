@@ -1,6 +1,8 @@
 import express from 'express'
 import cors from 'cors'
+import { configDotenv } from 'dotenv'
 import OpenAI from "openai"
+configDotenv()
 
 const app = express()
 const port = 3000
