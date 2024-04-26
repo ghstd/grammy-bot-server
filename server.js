@@ -83,7 +83,7 @@ async function getCompletion(messages) {
 	} else if (preparedMessages.length > 1) {
 		message = preparedMessages.splice(-2).join('\n')
 	}
-	console.log(message)
+	console.log(JSON.stringify(message))
 	const data = {
 		model: "command-r",
 		chatHistory: preparedMessages,
