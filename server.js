@@ -62,7 +62,8 @@ async function getCompletion(messages) {
 	const data = {
 		model: "command-r",
 		chatHistory: preparedMessages,
-		message: 'Игроки сделали свой ход, теперь ваша очередь, Мастер подземелий. Отвечай, пожалуйста, на этом языке и постарайся быть кратким.'
+		message: 'отвечай на русском языке'
+		// message: 'Игроки сделали свой ход, теперь ваша очередь, Мастер подземелий. Отвечай, пожалуйста, на этом языке и постарайся быть кратким.'
 	}
 	const response = axios.post(API_URL, data, config)
 	return response
