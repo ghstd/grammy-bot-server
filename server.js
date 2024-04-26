@@ -2,8 +2,7 @@ import express from 'express'
 import cors from 'cors'
 import axios from 'axios'
 import { configDotenv } from 'dotenv'
-import { CohereClient } from "cohere-ai"
-import { AbortController } from 'abortcontroller-polyfill/dist/polyfill-patch-fetch.js'
+import { AbortController } from "node-abort-controller"
 configDotenv()
 
 const controller = new AbortController()
@@ -12,12 +11,19 @@ const app = express()
 const port = 3000
 const URL = 'https://dnd-dwarves.netlify.app/.netlify/functions/bot'
 
+const API_URL = 'https://api.cohere.ai/v1/chat'
+const API_KEY = process.env.OPENAI_API_KEY
+
+const config = {
+  headers: {
+    'Content-Type': 'application/json',
+    'Authorization': `bearer ${API_KEY}`
+  },
+	signal: controller.signal
+}
+
 app.use(cors())
 app.use(express.json())
-
-const cohere = new CohereClient({
-	token: process.env.OPENAI_API_KEY
-})
 
 function prepareMessagesForCohere(messages) {
 	const preparedMessages = messages.map(oldMessage => {
@@ -53,12 +59,13 @@ function prepareMessagesForCohere(messages) {
 
 async function getCompletion(messages) {
 	const preparedMessages = prepareMessagesForCohere(messages)
-	const chat = await cohere.chat({
+	const data = {
 		model: "command-r",
 		chatHistory: preparedMessages,
 		message: 'The players have made their move, now it is your turn, Dungeon Master.'
-	})
-	return chat
+	}
+	const response = axios.post(API_URL, data, config)
+	return response
 }
 
 // ==================================
@@ -67,8 +74,7 @@ app.get('/test', async (req, res) => {
 	res.send('Hello World!')
 	const response = await axios.post('https://jsonplaceholder.typicode.com/posts', {
 			id: 117,
-			title: 'test axios',
-			signal: controller.signal
+			title: 'test axios'
 		})
 	console.log('axios.post status: ', response.status)
 	console.log(response.data)
@@ -84,8 +90,7 @@ app.post('/', async (req, res) => {
 			myMark: 'completion',
 			chat_id: data.chat_id,
 			message_id: data.message_id,
-			completion: completion.text,
-			signal: controller.signal
+			completion: completion.text
 		})
 		console.log('axios.post status: ', response.status)
 		return
