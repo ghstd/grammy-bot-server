@@ -62,7 +62,7 @@ async function getCompletion(messages) {
 	const data = {
 		model: "command-r",
 		chatHistory: preparedMessages,
-		message: 'Игроки сделали свой ход, теперь ваша очередь, Мастер подземелий. Отвечай, пожалуйста, на этом языке'
+		message: 'Игроки сделали свой ход, теперь ваша очередь, Мастер подземелий. Отвечай, пожалуйста, на этом языке и постарайся быть кратким.'
 	}
 	const response = axios.post(API_URL, data, config)
 	return response
@@ -93,7 +93,6 @@ app.post('/', async (req, res) => {
 			completion: completion.data.text
 		})
 		console.log('axios.post status: ', response.status)
-		console.log(completion)
 		return
 	} catch (e) {
 		console.log('in catch: ', e)
