@@ -78,9 +78,12 @@ function prepareMessagesForCohere(messages) {
 async function getCompletion(messages) {
 	const preparedMessages = prepareMessagesForCohere(messages)
 	let message = 'начните путешествие'
-	if (preparedMessages.length > 0) {
+	if (preparedMessages.length === 1) {
+		message = preparedMessages.splice(-1).join('\n')
+	} else if (preparedMessages.length > 1) {
 		message = preparedMessages.splice(-2).join('\n')
 	}
+	console.log(message)
 	const data = {
 		model: "command-r",
 		chatHistory: preparedMessages,
