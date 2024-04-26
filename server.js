@@ -3,7 +3,11 @@ import cors from 'cors'
 import axios from 'axios'
 import { configDotenv } from 'dotenv'
 import { CohereClient } from "cohere-ai"
+import { AbortController } from 'abortcontroller-polyfill/dist/cjs-ponyfill'
 configDotenv()
+
+const controller = new AbortController()
+const signal = controller.signal
 
 const app = express()
 const port = 3000
@@ -62,7 +66,11 @@ async function getCompletion(messages) {
 
 app.get('/test', async (req, res) => {
 	res.send('Hello World!')
-	const response = await axios.post('https://jsonplaceholder.typicode.com/posts', { id: 117, title: 'test axios' })
+	const response = await axios.post('https://jsonplaceholder.typicode.com/posts', {
+			id: 117,
+			title: 'test axios',
+			signal: signal
+		})
 	console.log('axios.post status: ', response.status)
 	console.log(response.data)
 	return
@@ -77,7 +85,8 @@ app.post('/', async (req, res) => {
 			myMark: 'completion',
 			chat_id: data.chat_id,
 			message_id: data.message_id,
-			completion: completion.text
+			completion: completion.text,
+			signal: signal
 		})
 		console.log('axios.post status: ', response.status)
 		return
