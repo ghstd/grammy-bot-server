@@ -62,7 +62,7 @@ async function getCompletion(messages) {
 	const data = {
 		model: "command-r",
 		chatHistory: preparedMessages,
-		message: 'The players have made their move, now it is your turn, Dungeon Master.'
+		message: 'Игроки сделали свой ход, теперь ваша очередь, Мастер подземелий. Отвечай, пожалуйста, на этом языке'
 	}
 	const response = axios.post(API_URL, data, config)
 	return response
@@ -90,7 +90,7 @@ app.post('/', async (req, res) => {
 			myMark: 'completion',
 			chat_id: data.chat_id,
 			message_id: data.message_id,
-			completion: completion.text
+			completion: completion.data.text
 		})
 		console.log('axios.post status: ', response.status)
 		console.log(completion)
