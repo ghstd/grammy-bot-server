@@ -79,11 +79,11 @@ async function getCompletion(messages) {
 	const preparedMessages = prepareMessagesForCohere(messages)
 	let message = 'начните путешествие'
 	if (preparedMessages.length === 1) {
-		message = preparedMessages.splice(-1).join('\n')
+		message = preparedMessages[0].message
 	} else if (preparedMessages.length > 1) {
-		message = preparedMessages.splice(-2).join('\n')
+		message = preparedMessages.splice(-2).map(item => item.message).join('\n')
 	}
-	console.log(JSON.stringify(message))
+	console.log(message)
 	const data = {
 		model: "command-r",
 		chatHistory: preparedMessages,
