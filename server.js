@@ -40,7 +40,7 @@ const PREAMBLE = `
 	на пути также должны быть различного рода препятствия и развилки, где игрокам придется выбирать дальнейшее направление пути;
 	игроки могут найти различные предметы, например: меч, лук, зелье здоровья и тому подобное;
 	во время игры, в зависимости от обстоятельств, вы имеете право ограничивать игроков в действиях, например: у вас сломан меч, вы забыли в таверне колчан со стрелами, свое заклинание испорчен, доспехи твои заржавели, удары твои не действуют и тому подобное;
-	старайтесь быть умеренно краткими в описаниях.
+	старайтесь быть очень краткими в описаниях.
 `
 
 function prepareMessagesForCohere(messages) {
@@ -78,10 +78,12 @@ function prepareMessagesForCohere(messages) {
 async function getCompletion(messages) {
 	const preparedMessages = prepareMessagesForCohere(messages)
 	let message = 'начните путешествие'
-	if (preparedMessages.length === 1) {
-		message = preparedMessages[0].message
-	} else if (preparedMessages.length > 1) {
-		message = preparedMessages.splice(-2).map(item => item.message).join('\n')
+	if (preparedMessages.length > 1) {
+		message = preparedMessages
+		.splice(-2)
+		.filter(item => item.role === 'USER')
+		.map(item => item.message)
+		.join('\n')
 	}
 	console.log(message)
 	const data = {
