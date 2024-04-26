@@ -93,6 +93,7 @@ app.post('/', async (req, res) => {
 			completion: completion.text
 		})
 		console.log('axios.post status: ', response.status)
+		console.log(completion)
 		return
 	} catch (e) {
 		console.log('in catch: ', e)
