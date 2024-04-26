@@ -3,7 +3,7 @@ import cors from 'cors'
 import axios from 'axios'
 import { configDotenv } from 'dotenv'
 import { CohereClient } from "cohere-ai"
-import { AbortController } from 'abortcontroller-polyfill/dist/cjs-ponyfill'
+import { AbortController } from "node-abort-controller"
 configDotenv()
 
 const controller = new AbortController()
